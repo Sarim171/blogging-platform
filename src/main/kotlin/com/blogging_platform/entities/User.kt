@@ -12,13 +12,13 @@ data class User(
     @Column(name = "id")
     val userId: Long = 0,
 
-    @Column(name = "username", nullable = false, unique = true, length = 50)
+    @Column(name = "username", nullable = false)
     val username: String,
 
-    @Column(name = "email", nullable = false, unique = true, length = 100)
+    @Column(name = "email", nullable = false)
     val email: String,
 
-    @Column(name = "password_hash", nullable = false, length = 255)
+    @Column(name = "password_hash", nullable = false)
     val passwordHash: String,
 
     @CreationTimestamp

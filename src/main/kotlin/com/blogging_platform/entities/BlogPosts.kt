@@ -13,10 +13,10 @@ data class BlogPosts(
     @Column(name = "id")
     val postId: Long = 0,
 
-    @Column(name = "title", nullable = false, length = 255)
+    @Column(name = "title", nullable = false)
     val title: String,
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "content", nullable = false)
     val content: String,
 
     @ManyToOne(fetch = FetchType.LAZY)

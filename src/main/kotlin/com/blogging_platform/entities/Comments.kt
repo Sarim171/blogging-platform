@@ -21,7 +21,7 @@ data class Comments(
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
-    @Column(name = "comment", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "comment", nullable = false)
     val commentText: String,
 
     @CreationTimestamp

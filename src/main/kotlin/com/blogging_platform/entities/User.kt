@@ -1,5 +1,6 @@
 package com.blogging_platform.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import java.time.LocalDateTime
@@ -10,7 +11,7 @@ data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    val userId: Long = 0,
+    val id: Long = 0,
 
     @Column(name = "username", nullable = false)
     val username: String,
@@ -32,5 +33,9 @@ data class User(
     val comments: List<Comments> = mutableListOf(),
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val likes: List<Likes> = mutableListOf()
+    val likes: List<Likes> = mutableListOf(),
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    val roles: List<Role> = emptyList()
 )

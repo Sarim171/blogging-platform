@@ -1,39 +1,63 @@
-CREATE TABLE Users
+create table roles
 (
-    id            SERIAL PRIMARY KEY,
-    username      VARCHAR(50) UNIQUE  NOT NULL,
-    email         VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255)        NOT NULL,
-    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id        bigint auto_increment
+        primary key,
+    role_name enum ('ADMIN', 'USER') null
 );
 
-CREATE TABLE Blog_Posts
+create table users
 (
-    id         SERIAL PRIMARY KEY,
-    title      VARCHAR(255) NOT NULL,
-    content    TEXT         NOT NULL,
-    author_id  INT REFERENCES Users (id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id            bigint auto_increment
+        primary key,
+    created_at    datetime(6)  not null,
+    email         varchar(255) not null,
+    password_hash varchar(255) not null,
+    username      varchar(255) not null
 );
 
-CREATE TABLE Comments
+create table blog_posts
 (
-    id          SERIAL PRIMARY KEY,
-    post_id     INT REFERENCES Blog_Posts (id) ON DELETE CASCADE,
-    user_id     INT REFERENCES Users (id) ON DELETE CASCADE,
-    comment     TEXT NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_editable BOOLEAN   DEFAULT TRUE
+    id         bigint auto_increment
+        primary key,
+    content    text not null,
+    created_at datetime(6)  not null,
+    title      varchar(255) not null,
+    updated_at datetime(6)  not null,
+    author_id  bigint       not null,
+    foreign key (author_id) references users (id)
 );
 
-CREATE TABLE Likes
+create table comments
 (
-    id         SERIAL PRIMARY KEY,
-    user_id    INT REFERENCES Users (id) ON DELETE CASCADE,
-    post_id    INT REFERENCES Blog_Posts (id) ON DELETE CASCADE,
-    comment_id INT REFERENCES Comments (id) ON DELETE CASCADE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id          bigint auto_increment
+        primary key,
+    comment     text not null,
+    created_at  datetime(6)  not null,
+    is_editable bit          not null,
+    updated_at  datetime(6)  not null,
+    post_id     bigint       not null,
+    user_id     bigint       not null,
+    foreign key (post_id) references blog_posts (id),
+    foreign key (user_id) references users (id)
 );
 
+create table likes
+(
+    id         bigint auto_increment
+        primary key,
+    created_at datetime(6) not null,
+    comment_id bigint      null,
+    post_id    bigint      not null,
+    user_id    bigint      not null,
+    foreign key (comment_id) references comments (id),
+    foreign key (post_id) references blog_posts (id),
+    foreign key (user_id) references users (id)
+);
+
+create table users_roles
+(
+    user_id  bigint not null,
+    roles_id bigint not null,
+    foreign key (user_id) references users (id),
+    foreign key (roles_id) references roles (id)
+);

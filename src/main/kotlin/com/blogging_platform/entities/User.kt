@@ -3,6 +3,7 @@ package com.blogging_platform.entities
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
+import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDateTime
 
 @Entity
@@ -14,7 +15,7 @@ data class User(
     val id: Long = 0,
 
     @Column(name = "username", nullable = false)
-    val username: String,
+    val userName: String,
 
     @Column(name = "email", nullable = false)
     val email: String,
@@ -38,4 +39,26 @@ data class User(
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     val roles: List<Role> = emptyList()
-)
+) : UserDetails {
+
+    @JsonIgnore
+    override fun getAuthorities() = this.roles
+
+    @JsonIgnore
+    override fun getPassword() = this.passwordHash
+
+    @JsonIgnore
+    override fun getUsername() = this.email
+
+    @JsonIgnore
+    override fun isAccountNonExpired() = true
+
+    @JsonIgnore
+    override fun isAccountNonLocked() = true
+
+    @JsonIgnore
+    override fun isCredentialsNonExpired() = true
+
+    @JsonIgnore
+    override fun isEnabled() = true
+}
